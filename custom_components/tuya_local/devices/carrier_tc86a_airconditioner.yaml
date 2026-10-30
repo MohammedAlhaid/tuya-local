@@ -1,0 +1,80 @@
+name: Air conditioner
+
+products:
+  - id: qxjcbkkyqdtuyobd
+    manufacturer: Carrier
+    model: TC86 A
+
+entities:
+  - entity: climate
+    dps:
+      - id: 1
+        type: boolean
+        name: hvac_mode
+        mapping:
+          - dps_val: false
+            value: "off"
+          - dps_val: true
+            constraint: mode
+            conditions:
+              - dps_val: "Cool"
+                value: cool
+              - dps_val: "Heat"
+                value: heat
+              - dps_val: "Dry"
+                value: dry
+              - dps_val: "Fan"
+                value: fan_only
+
+      - id: 2
+        type: integer
+        name: temperature
+        unit: C
+        range:
+          min: 20
+          max: 30
+
+      - id: 3
+        type: integer
+        name: current_temperature
+        unit: C
+
+      # Operating mode, used only as the constraint for hvac_mode above.
+      - id: 4
+        type: string
+        name: mode
+        hidden: true
+
+      - id: 5
+        type: string
+        name: fan_mode
+        mapping:
+          - dps_val: "1"
+            value: low
+          - dps_val: "2"
+            value: medium
+          - dps_val: "3"
+            value: high
+          - dps_val: "4"
+            value: auto
+
+  # Faults are reported by the device but hidden in the Tuya app: DP22 is a
+  # bitmap of error codes E1-E6, DP101 the corresponding text ("NOerror" when
+  # healthy).
+  - entity: binary_sensor
+    class: problem
+    category: diagnostic
+    dps:
+      - id: 22
+        type: bitfield
+        name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - value: true
+      - id: 22
+        type: bitfield
+        name: fault_code
+      - id: 101
+        type: string
+        name: fault_text
