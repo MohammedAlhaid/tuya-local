@@ -1,0 +1,105 @@
+name: CCT track light
+
+products:
+  - id: pdgzvgfu
+    model: HU-S3D0101-10
+
+  - id: cnfc04xs
+    model: ME-S35-ZD106-10
+
+  - id: cnfc04xs
+    model: HU-S3FD0601-10
+
+  - id: tumfymby
+    model: HU-S3D0101-15
+
+entities:
+  # This fitting is CCT only, it has no RGB channel, so no rgbhsv dps.
+  - entity: light
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+
+      - id: 3
+        name: brightness
+        type: integer
+        optional: true
+        range:
+          min: 10
+          max: 1000
+
+      # The device sends 0-1000, Home Assistant wants kelvin.
+      - id: 4
+        name: color_temp
+        type: integer
+        optional: true
+        range:
+          min: 0
+          max: 1000
+        mapping:
+          - target_range:
+              min: 2700
+              max: 6500
+
+  # Only the four white/brightness scenes of the generic profile are
+  # applicable, the other four carry RGB payloads this fitting cannot render.
+  - entity: select
+    translation_key: scene
+    category: config
+    dps:
+      - id: 6
+        type: string
+        name: option
+        optional: true
+        mapping:
+          - dps_val: "00282800012e0081015c00000000"
+            value: Good night
+
+          - dps_val: "010e0d0000000000000003e801f4"
+            value: reading
+
+          - dps_val: "020e0d0000000000000003e803e8"
+            value: working
+
+          - dps_val: "030e0d0000000000000001f401f4"
+            value: leisure
+
+  - entity: time
+    translation_key: timer
+    category: config
+    hidden: unavailable
+    dps:
+      - id: 7
+        type: integer
+        optional: true
+        name: second
+        range:
+          min: 0
+          max: 86400
+      - id: 7
+        type: integer
+        optional: true
+        name: available
+        mapping:
+          - dps_val: null
+            value: false
+          - value: true
+
+  - entity: switch
+    translation_key: do_not_disturb
+    category: config
+    hidden: unavailable
+    dps:
+      - id: 34
+        type: boolean
+        optional: true
+        name: switch
+      - id: 34
+        type: boolean
+        optional: true
+        name: available
+        mapping:
+          - dps_val: null
+            value: false
+          - value: true
