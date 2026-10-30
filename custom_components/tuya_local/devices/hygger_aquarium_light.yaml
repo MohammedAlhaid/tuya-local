@@ -1,0 +1,107 @@
+name: Aquarium light
+
+products:
+  - id: 2gv5busa
+    manufacturer: Hygger
+    model: HG028-MS
+
+entities:
+  - entity: light
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+
+      - id: 3
+        name: brightness
+        type: integer
+        optional: true
+        range:
+          min: 10
+          max: 1000
+
+      - id: 5
+        name: rgbhsv
+        type: hex
+        optional: true
+        format:
+          - name: h
+            bytes: 2
+            range:
+              min: 0
+              max: 360
+
+          - name: s
+            bytes: 2
+            range:
+              min: 0
+              max: 1000
+
+          - name: v
+            bytes: 2
+            range:
+              min: 0
+              max: 1000
+
+  - entity: select
+    name: Aquarium mode
+    category: config
+    dps:
+      - id: 103
+        type: string
+        name: option
+        optional: true
+        mapping:
+          - dps_val: M
+            value: Manual
+
+          - dps_val: sun
+            value: Sunrise/Sunset
+
+          - dps_val: L8
+            value: 8 Times Set
+
+  - entity: select
+    name: Aquarium preset
+    category: config
+    dps:
+      - id: 104
+        type: string
+        name: option
+        optional: true
+        mapping:
+          - dps_val: "010064012a03e8"
+            value: Sunlight
+
+          - dps_val: "0200b9029902ed"
+            value: Moonlight
+
+          - dps_val: "030014012a03e8"
+            value: Fishlight
+
+          - dps_val: "0400f302b203e8"
+            value: Ocean Blue
+
+          - dps_val: "05000000000066"
+            value: User Defined 1
+
+          - dps_val: "06001c01d700c8"
+            value: User Defined 2
+
+  - entity: text
+    name: L8 program raw
+    category: diagnostic
+    dps:
+      - id: 101
+        type: base64
+        optional: true
+        name: value
+
+  - entity: text
+    name: Sunrise sunset raw
+    category: diagnostic
+    dps:
+      - id: 102
+        type: base64
+        optional: true
+        name: value
